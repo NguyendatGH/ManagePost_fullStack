@@ -4,11 +4,14 @@ import { db } from "@/lib/db";
 
 async function getPost(){
   const res = await db.post.findMany({
-    select:{
+    select: {
       id: true,
       title: true,
       content: true,
       tag: true,
+    },
+    orderBy:{
+      createAt: 'desc',
     }
   });
   return res;
@@ -16,11 +19,12 @@ async function getPost(){
 
 export default async function Home() {
 
-  const post = await getPost();
-  console.log(post);
+  const posts = await getPost();
+  // console.log(posts);
+
   return (
     <main className="grid items-center justify-center md:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
-      {post.map(post=>(
+      {posts.map(post=>(
         <PostCard key={post.id} post={post}/>
       ))}
     </main>

@@ -2,7 +2,7 @@
 
 import { FormInputPost } from "@/types";
 import { Tag } from "@prisma/client";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React, { FC } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,10 +10,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 interface FormPostProps {
   submit: SubmitHandler<FormInputPost>;
   isEditing: boolean;
+  initialValue ?: FormInputPost;
 }
 
-const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
-  const { register, handleSubmit } = useForm<FormInputPost>();
+const FormPost: FC<FormPostProps> = ({ submit, isEditing , initialValue}) => {
+  const { register, handleSubmit } = useForm<FormInputPost>({
+    defaultValues: initialValue,
+  });
 
   //fetch list tags
   const { data: dataTags, isLoading: isLoadingTags } = useQuery<Tag[]>({
@@ -23,7 +26,7 @@ const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
       return response.data;
     },
   });
-  console.log(dataTags);
+  // console.log(dataTags);
 
   return (
     <form
@@ -48,7 +51,7 @@ const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
       ) : (
         <select
           className="select select-bordered w-full max-w-lg"
-          {...register("tag", { required: true })}
+          {...register("tagId", { required: true })}
           defaultValue={""}
         >
           <option disabled value="">
